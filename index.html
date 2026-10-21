@@ -202,6 +202,53 @@ button:focus-visible,input:focus-visible,.card:focus-visible{outline:3px solid v
 
 .log{font-size:12px;color:var(--muted);text-align:center;padding:0 14px;min-height:16px;font-weight:700}
 
+/* recent plays strip */
+.history{display:flex;justify-content:center;align-items:flex-end;gap:14px;padding:6px 14px 2px;min-height:58px}
+.history .h{display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.75}
+.history .h:last-child{opacity:1}
+.history .h .cards{display:flex}
+.history .h .card{--card-w:34px;--card-h:48px;width:34px;height:48px;border-radius:5px;margin-left:-14px;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.history .h .card:first-child{margin-left:0}
+.history .h .card .r{font-size:11px;top:2px;left:4px}
+.history .h .card .s{font-size:9px;top:14px;left:4px}
+.history .h .card .big{font-size:15px;right:3px;bottom:2px}
+.history .h .card .r2,.history .h .card.special::after{display:none}
+.history .h .who{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800;white-space:nowrap}
+.history .h .mark{font-size:26px;line-height:48px}
+.history .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800;align-self:center;margin-right:2px}
+
+/* burn / pickup effects */
+.fx{position:fixed;inset:0;pointer-events:none;z-index:15;overflow:hidden}
+.fx span{position:absolute;left:50%;top:45%;font-size:72px;line-height:1;transform:translate(-50%,-50%);opacity:0}
+.fx.burn span{animation:flame 1.5s ease-out forwards}
+.fx.burn span:nth-child(2){animation-delay:.12s;margin-left:-60px;font-size:54px}
+.fx.burn span:nth-child(3){animation-delay:.22s;margin-left:62px;font-size:58px}
+.fx.burn span:nth-child(4){animation-delay:.3s;margin-top:-10px;font-size:92px}
+@keyframes flame{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}60%{opacity:1;transform:translate(-50%,-80%) scale(1)}100%{opacity:0;transform:translate(-50%,-140%) scale(.8)}}
+.fx.pickup span{animation:cry 1.8s ease-out forwards}
+.fx.pickup span:nth-child(2),.fx.pickup span:nth-child(3){font-size:22px;animation:tear 1.8s ease-in forwards;animation-delay:.35s}
+.fx.pickup span:nth-child(2){margin-left:-22px}.fx.pickup span:nth-child(3){margin-left:22px;animation-delay:.5s}
+@keyframes cry{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}25%{transform:translate(-50%,-50%) scale(1) rotate(-8deg)}40%{transform:translate(-50%,-50%) rotate(8deg)}55%{transform:translate(-50%,-50%) rotate(-6deg)}70%{opacity:1;transform:translate(-50%,-50%) rotate(0)}100%{opacity:0;transform:translate(-50%,-60%) scale(.9)}}
+@keyframes tear{0%{opacity:0;transform:translate(-50%,-20%)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,180%)}}
+@media (prefers-reduced-motion:reduce){.fx span{animation-duration:.01s!important}}
+
+/* Bibi mode: pink sparkly nails */
+body.bibi{--rust:#d63f95;--rust-soft:#ff7fc8}
+body.bibi .hand-wrap{position:relative}
+body.bibi .hand-wrap::before,body.bibi .hand-wrap::after{
+  content:"💅";position:absolute;bottom:-6px;font-size:46px;line-height:1;pointer-events:none;z-index:3;
+  filter:drop-shadow(0 0 6px rgba(255,127,200,.9));animation:nails 2.6s ease-in-out infinite;
+}
+body.bibi .hand-wrap::before{left:4px;transform:scaleX(-1) rotate(-10deg)}
+body.bibi .hand-wrap::after{right:4px;transform:rotate(10deg);animation-delay:1.3s}
+@keyframes nails{0%,100%{translate:0 0}50%{translate:0 -5px}}
+body.bibi .sparkle{position:absolute;font-size:14px;pointer-events:none;z-index:4;animation:twinkle 1.8s ease-in-out infinite;opacity:0}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(25deg)}}
+body.bibi .card.sel{box-shadow:0 0 0 3px #ff7fc8,0 0 18px rgba(255,127,200,.7)}
+body.bibi .btn:not(.secondary){background:linear-gradient(135deg,#ff6fc0,#d63f95);box-shadow:0 4px 0 #8f1f61}
+body.bibi .topbar .who::after{content:" ✨"}
+@media (prefers-reduced-motion:reduce){body.bibi .hand-wrap::before,body.bibi .hand-wrap::after,body.bibi .sparkle{animation:none;opacity:1}}
+
 @media (min-height:760px){:root{--card-w:70px;--card-h:98px}}
 @media (min-width:700px) and (min-height:700px){:root{--card-w:80px;--card-h:112px} body{font-size:16px}}
 @media (max-height:620px){:root{--card-w:52px;--card-h:73px} .middle{min-height:96px}}
@@ -267,6 +314,7 @@ button:focus-visible,input:focus-visible,.card:focus-visible{outline:3px solid v
 
   <div class="message" id="message"></div>
   <div class="log" id="log"></div>
+  <div class="history" id="history"></div>
 
   <div class="zone me">
     <div class="zone-label" id="me-label"></div>
@@ -276,6 +324,7 @@ button:focus-visible,input:focus-visible,.card:focus-visible{outline:3px solid v
   <div class="actions" id="actions"></div>
 </div>
 
+<div class="fx" id="fx" aria-hidden="true"></div>
 <div class="overlay" id="overlay">
   <div class="sheet">
     <div class="cat" aria-hidden="true"></div>
@@ -311,7 +360,7 @@ function newGame(names){
   const deck=makeDeck();
   const players=names.map(n=>({name:n, hand:[], up:[], down:[], ready:false}));
   for(const p of players){ p.down=deck.splice(0,3); p.up=deck.splice(0,3); p.hand=deck.splice(0,3); }
-  return {phase:'swap', players, deck, pile:[], burned:0, turn:0, winner:null, log:'Swap cards, then tap Ready.', lastBlind:null, lastPlay:null};
+  return {phase:'swap', players, deck, pile:[], burned:0, turn:0, winner:null, log:'Swap cards, then tap Ready.', lastBlind:null, lastPlay:null, history:[], event:null, eventSeq:0};
 }
 
 function effectiveTop(pile){
@@ -344,6 +393,8 @@ function hasLegalMove(p, pile){
 }
 
 function cardsLeft(p){ return p.hand.length+p.up.length+p.down.length; }
+function pushHistory(state, entry){ state.history=(state.history||[]).concat([entry]).slice(-3); }
+function fireEvent(state, type, by){ state.eventSeq=(state.eventSeq||0)+1; state.event={id:state.eventSeq, type, by}; }
 
 /* Cards this player may add to their own last play while the other player hasn't moved. */
 function fastCards(state, pi){
@@ -385,6 +436,7 @@ function afterPlay(state, pi, playedRank){
   const fourKind = n>=4 && state.pile.slice(-4).every(c=>c.r===state.pile[n-1].r);
   if(playedRank===10 || fourKind){
     state.burned+=state.pile.length; state.pile=[]; state.lastPlay=null;
+    pushHistory(state,{by:pi, burn:true}); fireEvent(state,'burn',pi);
     state.log=`${p.name} burned the pile${fourKind&&playedRank!==10?' with four of a kind':''}. Go again!`;
     return; // same player
   }
@@ -432,6 +484,7 @@ function applyAction(state, pi, a){
     p[src]=p[src].filter(c=>!ids.includes(c.id));
     state.pile.push(...cards);
     lp.cards.push(...cards);
+    { const h=state.history||[]; const last=h[h.length-1]; if(last&&last.by===pi&&last.cards) last.cards=last.cards.concat(cards); else pushHistory(state,{by:pi,cards:cards.slice()}); }
     state.log=`${me} quickly added ${listCards(cards)}.`;
     const opp=state.turn;
     state.turn=pi;            // afterPlay reasons from the player who played
@@ -455,6 +508,7 @@ function applyAction(state, pi, a){
     p[src]=p[src].filter(c=>!ids.includes(c.id));
     state.pile.push(...cards);
     state.lastPlay={by:pi, rank:r, cards:cards.slice()};
+    pushHistory(state,{by:pi, cards:cards.slice()});
     state.log=`${me} played ${listCards(cards)}.`;
     afterPlay(state, pi, r);
     return {ok:true};
@@ -468,10 +522,12 @@ function applyAction(state, pi, a){
     if(state.lastBlind.ok){
       state.pile.push(c);
       state.lastPlay={by:pi, rank:c.r, cards:[c]};
+      pushHistory(state,{by:pi, cards:[c], blind:true});
       state.log=`${me} flipped ${cardName(c)}. It plays!`;
       afterPlay(state, pi, c.r);
     } else {
       p.hand.push(...state.pile, c); state.pile=[]; state.lastPlay=null;
+      pushHistory(state,{by:pi, pickup:true}); fireEvent(state,'pickup',pi);
       state.log=`${me} flipped ${cardName(c)}. No good. Picked up the pile.`;
       state.turn=(pi+1)%state.players.length;
     }
@@ -481,6 +537,7 @@ function applyAction(state, pi, a){
     if(!state.pile.length) return {ok:false,error:'Nothing to pick up.'};
     if(hasLegalMove(p, state.pile)) return {ok:false,error:'You have a legal move. Play it.'};
     p.hand.push(...state.pile); state.pile=[]; state.lastPlay=null;
+    pushHistory(state,{by:pi, pickup:true}); fireEvent(state,'pickup',pi);
     state.log=`${me} couldn't play and picked up the pile.`;
     state.turn=(pi+1)%state.players.length;
     return {ok:true};
@@ -492,7 +549,7 @@ function applyAction(state, pi, a){
 function viewFor(state, pi){
   return {
     phase:state.phase, turn:state.turn, winner:state.winner, log:state.log, burned:state.burned,
-    deck:state.deck.length, pile:state.pile, lastBlind:state.lastBlind, lastPlay:state.lastPlay, me:pi,
+    deck:state.deck.length, pile:state.pile, lastBlind:state.lastBlind, lastPlay:state.lastPlay, history:state.history||[], event:state.event||null, me:pi,
     players:state.players.map((p,i)=>({
       name:p.name, ready:p.ready, up:p.up, down:p.down.length,
       hand: i===pi ? p.hand : p.hand.length,
@@ -632,7 +689,7 @@ function flash(msg, warn){
   const m=$('message'); m.textContent=msg; m.classList.toggle('warn',!!warn);
   clearTimeout(flashTimer); flashTimer=setTimeout(render, 2200);
 }
-function showTable(){ $('lobby').classList.add('off'); $('table').classList.add('on'); $('t-room').textContent='Room '+roomCode; }
+function showTable(){ $('lobby').classList.add('off'); $('table').classList.add('on'); $('t-room').textContent='Room '+roomCode; applyBibi(); }
 function resetToLobby(){
   try{ peer&&peer.destroy(); }catch(e){}
   peer=null; conn=null; view=null; state=null; role=null;
@@ -711,6 +768,20 @@ function render(){
   } else msg.textContent='';
   $('log').textContent=v.log||'';
 
+  // Recent plays
+  const hist=$('history'); hist.innerHTML='';
+  if(v.phase==='play' && v.history.length){
+    const l=document.createElement('span'); l.className='lbl'; l.textContent='Recent'; hist.appendChild(l);
+    for(const h of v.history){
+      const d=document.createElement('div'); d.className='h';
+      if(h.cards){ const cs=document.createElement('div'); cs.className='cards'; h.cards.forEach(c=>cs.appendChild(cardEl(c))); d.appendChild(cs); }
+      else { const m=document.createElement('div'); m.className='mark'; m.textContent=h.burn?'🔥':'😭'; d.appendChild(m); }
+      const w=document.createElement('span'); w.className='who'; w.textContent=(h.by===v.me?'you':v.players[h.by].name)+(h.burn?' burned':h.pickup?' picked up':h.blind?' (blind)':''); d.appendChild(w);
+      hist.appendChild(d);
+    }
+  }
+  playEvent(v.event);
+
   // Me
   $('me-label').innerHTML=`<b>${esc(me.name)}</b>`+(myTurn?' <span class="turnpill">your turn</span>':'')+(v.phase==='swap'&&me.ready?' <span class="readypill">ready</span>':'');
   const ms=$('me-stack'); ms.innerHTML='';
@@ -784,6 +855,22 @@ function render(){
   } else ov.classList.remove('on');
 }
 
+let seenEvent;
+function playEvent(ev){
+  if(seenEvent===undefined){ seenEvent=ev?ev.id:0; return; }   // no replay on first render / resume
+  if(!ev||ev.id===seenEvent) return;
+  seenEvent=ev.id;
+  const fx=$('fx'); fx.className='fx '+ev.type;
+  fx.innerHTML = ev.type==='burn' ? '<span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span>' : '<span>😭</span><span>💧</span><span>💧</span>';
+  clearTimeout(fx._t); fx._t=setTimeout(()=>{ fx.className='fx'; fx.innerHTML=''; }, 2000);
+}
+function applyBibi(){
+  const on=/^bibi$/i.test((myName||'').trim());
+  document.body.classList.toggle('bibi',on);
+  const wrap=document.querySelector('.hand-wrap');
+  wrap.querySelectorAll('.sparkle').forEach(e=>e.remove());
+  if(on){ [[6,-4,0],[52,18,.6],[-2,30,1.2]].forEach(([x,y,dl],i)=>{ for(const side of ['left','right']){ const sp=document.createElement('span'); sp.className='sparkle'; sp.textContent='✨'; sp.style[side]=x+'px'; sp.style.bottom=(y+8)+'px'; sp.style.animationDelay=(dl+(side==='right'?.3:0))+'s'; wrap.appendChild(sp); } }); }
+}
 function btn(label, fn){ const b=document.createElement('button'); b.className='btn'; b.textContent=label; b.onclick=fn; return b; }
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
