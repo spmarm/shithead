@@ -85,7 +85,7 @@ button:focus-visible,input:focus-visible,.card:focus-visible{outline:3px solid v
 @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
 
 /* ---------- Table ---------- */
-#table{height:100%;display:none;flex-direction:column;}
+#table{min-height:100%;display:none;flex-direction:column;}
 #table.on{display:flex}
 #lobby.off{display:none}
 .topbar{
@@ -135,6 +135,7 @@ button:focus-visible,input:focus-visible,.card:focus-visible{outline:3px solid v
 .hand-wrap{padding:6px 0 0;flex-shrink:0}
 .actions{flex-shrink:0}
 .zone.me{flex-shrink:0}
+.bottom{position:sticky;bottom:0;z-index:5;flex-shrink:0;background:linear-gradient(to top, var(--felt-deep) 0, var(--felt-deep) 70%, rgba(20,32,58,0) 100%);padding-top:6px}
 .hand{
   display:flex;justify-content:center;gap:0;padding:14px 14px 4px;overflow-x:auto;scrollbar-width:none;
   min-height:calc(var(--card-h) + 22px);
@@ -250,10 +251,33 @@ body.bibi .hand.fan .handart{display:block}
 body.bibi .hand.fan{height:calc(var(--card-h) + 84px)}
 body.bibi .hand.fan .card{bottom:34px}
 @media (prefers-reduced-motion:reduce){.handart animate{display:none}}
-@media (min-height:900px){:root{--card-w:70px;--card-h:98px}}
+/* ---- sizes ---- */
+:root{--card-w:56px;--card-h:78px}
 @media (min-width:700px) and (min-height:700px){:root{--card-w:80px;--card-h:112px} body{font-size:16px}}
-@media (max-height:720px){:root{--card-w:52px;--card-h:73px} .opp .mini-hand{display:none} .zone{gap:4px} .middle{padding-top:26px;min-height:calc(var(--card-h) + 58px)} .history{min-height:52px;padding-top:2px} .hand-wrap{padding-top:0} .actions{padding-top:4px}}
-@media (max-height:720px){body.bibi .hand.fan{height:calc(var(--card-h) + 70px)} body.bibi .hand.fan .card{bottom:30px} .history{min-height:48px}}
+@media (min-width:480px) and (min-height:900px){:root{--card-w:70px;--card-h:98px}}
+/* phones: compact everything above the pinned hand */
+@media (max-width:480px){
+  .opp .mini-hand{display:none}
+  .opp .card{--card-w:44px;--card-h:62px;width:44px;height:62px}
+  .opp .slot{width:44px;height:62px}
+  .opp .card .r{font-size:13px}.opp .card .s{font-size:10px;top:17px}.opp .card .big{font-size:20px}
+  .zone{gap:4px;padding:2px 14px}
+  .middle{min-height:calc(var(--card-h) + 76px);padding-top:28px;padding-bottom:20px;gap:30px}
+  .log{display:none}
+  .history{min-height:46px;padding:2px 14px 0;gap:10px}
+  .history .h .card{--card-w:28px;--card-h:40px;width:28px;height:40px;margin-left:-11px}
+  .history .h .card .r{font-size:10px;top:2px;left:3px}.history .h .card .s{display:none}.history .h .card .big{font-size:12px;right:2px;bottom:1px}
+  .history .h .mark{font-size:22px;line-height:40px}
+  .message{font-size:13px;min-height:18px}
+  .log{font-size:11px;min-height:14px}
+  .hand-wrap{padding-top:0}
+  .hand.fan{height:calc(var(--card-h) + 52px)}
+  .hand.fan .card{bottom:18px}
+  body.bibi .hand.fan{height:calc(var(--card-h) + 74px)}
+  body.bibi .hand.fan .card{bottom:30px}
+  .actions{padding-top:4px}
+  .actions .btn{padding:10px 16px}
+}
 </style>
 </head>
 <body>
@@ -318,12 +342,14 @@ body.bibi .hand.fan .card{bottom:34px}
   <div class="log" id="log"></div>
   <div class="history" id="history"></div>
 
+  <div class="bottom">
   <div class="zone me">
     <div class="zone-label" id="me-label"></div>
     <div class="stack" id="me-stack"></div>
   </div>
   <div class="hand-wrap"><div class="hand" id="hand"><svg class="handart back" viewBox="0 0 300 220" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><defs><linearGradient id="nailg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffa7dc"/><stop offset=".55" stop-color="var(--nail)"/><stop offset="1" stop-color="var(--nail-dark)"/></linearGradient></defs><path d="M78 220 L78 150 Q78 118 110 118 L205 118 Q240 118 240 152 L240 220 Z" fill="var(--skin)" stroke="var(--skin-dark)" stroke-width="2"/><g transform="rotate(-7 108 150)"><rect x="93" y="42" width="30" height="130" rx="15" fill="var(--skin)" stroke="var(--skin-dark)" stroke-width="2"/><line x1="99" y1="84" x2="117" y2="84" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><line x1="99" y1="120" x2="117" y2="120" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><g transform="translate(108 57) rotate(0) scale(1)"><ellipse rx="10" ry="12.5" fill="url(#nailg)" stroke="var(--nail-dark)" stroke-width="1.2"/><ellipse cx="-3" cy="-4" rx="3" ry="4.5" fill="#fff" opacity=".65"/><circle cx="4" cy="3" r="1" fill="#fff" opacity=".9"/><circle cx="-1" cy="6" r=".8" fill="#fff" opacity=".8"/><circle cx="5" cy="-5" r=".7" fill="#fff" opacity=".8"/></g></g><g transform="rotate(-2 143 150)"><rect x="128" y="26" width="30" height="130" rx="15" fill="var(--skin)" stroke="var(--skin-dark)" stroke-width="2"/><line x1="134" y1="68" x2="152" y2="68" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><line x1="134" y1="104" x2="152" y2="104" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><g transform="translate(143 41) rotate(0) scale(1)"><ellipse rx="10" ry="12.5" fill="url(#nailg)" stroke="var(--nail-dark)" stroke-width="1.2"/><ellipse cx="-3" cy="-4" rx="3" ry="4.5" fill="#fff" opacity=".65"/><circle cx="4" cy="3" r="1" fill="#fff" opacity=".9"/><circle cx="-1" cy="6" r=".8" fill="#fff" opacity=".8"/><circle cx="5" cy="-5" r=".7" fill="#fff" opacity=".8"/></g></g><g transform="rotate(3 178 150)"><rect x="163" y="34" width="30" height="130" rx="15" fill="var(--skin)" stroke="var(--skin-dark)" stroke-width="2"/><line x1="169" y1="76" x2="187" y2="76" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><line x1="169" y1="112" x2="187" y2="112" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><g transform="translate(178 49) rotate(0) scale(1)"><ellipse rx="10" ry="12.5" fill="url(#nailg)" stroke="var(--nail-dark)" stroke-width="1.2"/><ellipse cx="-3" cy="-4" rx="3" ry="4.5" fill="#fff" opacity=".65"/><circle cx="4" cy="3" r="1" fill="#fff" opacity=".9"/><circle cx="-1" cy="6" r=".8" fill="#fff" opacity=".8"/><circle cx="5" cy="-5" r=".7" fill="#fff" opacity=".8"/></g></g><g transform="rotate(9 212 150)"><rect x="197" y="62" width="30" height="130" rx="15" fill="var(--skin)" stroke="var(--skin-dark)" stroke-width="2"/><line x1="203" y1="104" x2="221" y2="104" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><line x1="203" y1="140" x2="221" y2="140" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><g transform="translate(212 77) rotate(0) scale(1)"><ellipse rx="10" ry="12.5" fill="url(#nailg)" stroke="var(--nail-dark)" stroke-width="1.2"/><ellipse cx="-3" cy="-4" rx="3" ry="4.5" fill="#fff" opacity=".65"/><circle cx="4" cy="3" r="1" fill="#fff" opacity=".9"/><circle cx="-1" cy="6" r=".8" fill="#fff" opacity=".8"/><circle cx="5" cy="-5" r=".7" fill="#fff" opacity=".8"/></g></g><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" transform="translate(92 30) scale(0.8)"><animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="0s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1.9s" begin="0s" repeatCount="indefinite" additive="sum"/></path><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" transform="translate(160 10) scale(1)"><animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="0.6s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1.9s" begin="0.6s" repeatCount="indefinite" additive="sum"/></path><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" transform="translate(228 44) scale(0.9)"><animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="1.1s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1.9s" begin="1.1s" repeatCount="indefinite" additive="sum"/></path><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" transform="translate(126 18) scale(0.6)"><animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="1.4s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1.9s" begin="1.4s" repeatCount="indefinite" additive="sum"/></path></svg><svg class="handart front" viewBox="0 0 300 220" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><defs><linearGradient id="nailg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffa7dc"/><stop offset=".55" stop-color="var(--nail)"/><stop offset="1" stop-color="var(--nail-dark)"/></linearGradient></defs><g transform="rotate(30 100 212)"><rect x="82" y="92" width="36" height="150" rx="18" fill="var(--skin)" stroke="var(--skin-dark)" stroke-width="2"/><line x1="89" y1="148" x2="111" y2="148" stroke="var(--skin-dark)" stroke-width="1.5" opacity=".45"/><g transform="translate(100 109) rotate(0) scale(1.15)"><ellipse rx="10" ry="12.5" fill="url(#nailg)" stroke="var(--nail-dark)" stroke-width="1.2"/><ellipse cx="-3" cy="-4" rx="3" ry="4.5" fill="#fff" opacity=".65"/><circle cx="4" cy="3" r="1" fill="#fff" opacity=".9"/><circle cx="-1" cy="6" r=".8" fill="#fff" opacity=".8"/><circle cx="5" cy="-5" r=".7" fill="#fff" opacity=".8"/></g></g><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" transform="translate(150 128) scale(0.7)"><animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="0.3s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1.9s" begin="0.3s" repeatCount="indefinite" additive="sum"/></path><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" transform="translate(118 96) scale(0.9)"><animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="1.0s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1.9s" begin="1.0s" repeatCount="indefinite" additive="sum"/></path><path d="M0,-7 L1.6,-1.6 L7,0 L1.6,1.6 L0,7 L-1.6,1.6 L-7,0 L-1.6,-1.6 Z" fill="#fff" transform="translate(172 150) scale(0.6)"><animate attributeName="opacity" values="0;1;0" dur="1.9s" begin="1.6s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" from="0" to="90" dur="1.9s" begin="1.6s" repeatCount="indefinite" additive="sum"/></path></svg></div></div>
   <div class="actions" id="actions"></div>
+  </div>
 </div>
 
 <div class="fx" id="fx" aria-hidden="true"></div>
